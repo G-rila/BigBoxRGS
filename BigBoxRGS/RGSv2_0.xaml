@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="BigBoxRGS.RGSv2_0"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:BigBoxRGS"
+             mc:Ignorable="d" 
+             d:DesignHeight="480" d:DesignWidth="640" BorderThickness="3" BorderBrush="White" Loaded="UserControl_Loaded">
+    <UserControl.Background>
+        <SolidColorBrush Color="Black" Opacity="0.85" />
+    </UserControl.Background>
+    <Grid>
+        <DockPanel x:Name="PlayModeMenu" LastChildFill="False">
+            <TextBlock x:Name="MenuTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="10,10,10,0"/>
+            <TextBlock x:Name="MenuInstructions" Text="select a random game with one of the following play modes:" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10" DockPanel.Dock="Top"/>
+            <ListBox x:Name="MenuItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" DockPanel.Dock="Top"/>
+            <TextBlock x:Name="MenuBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10" DockPanel.Dock="Bottom"/>
+        </DockPanel>
+        <DockPanel x:Name="ErrorMessageMenu">
+            <TextBlock x:Name="ErrorText" Foreground="White" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10" DockPanel.Dock="Top" Text="Error"/>
+        </DockPanel>
+        <StackPanel x:Name="GameDetailMenu">
+            <TextBlock x:Name="GameTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+            <TextBlock x:Name="GamePlayMode" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+            <Image x:Name="GameImage" RenderOptions.BitmapScalingMode="HighQuality" Margin="10,0,10,10" MaxWidth="640" MaxHeight="640"/>
+            <ListBox x:Name="GameMenuItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
+                <ListBox.Items>
+                    <ListBoxItem Content="Play this game"/>
+                    <ListBoxItem Content="Choose another game"/>
+                </ListBox.Items>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</UserControl>
