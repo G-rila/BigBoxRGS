@@ -255,7 +255,7 @@ namespace BigBoxRGS
                         }
                     }
                 }
-                MenuItems.Items.Add("*No preferred play mode");
+                MenuItems.Items.Add("* No preferred play mode *");
                 MenuItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
                 MenuItems.SelectedIndex = 0;
 
@@ -511,9 +511,16 @@ namespace BigBoxRGS
 
         private bool MatchesSelectedPlayMode(IGame g)
         {
-            if (g.PlayMode.Contains(_playmode)) //need to add logic here to make sure game isn't marked broken or hidden
+            if (g.PlayMode.Contains(_playmode))
             {
-                return true;
+                if (g.Broken == false || g.Hide == false)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
