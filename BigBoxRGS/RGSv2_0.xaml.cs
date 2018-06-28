@@ -53,10 +53,13 @@ namespace BigBoxRGS
 
             if (MainMenu.Visibility == Visibility.Visible)
             {
-                mmItems.SelectedIndex = mmItems.SelectedIndex - 1;
-                if (mmItems.SelectedIndex < 0)
+                if (mmItems.SelectedIndex == 0)
                 {
-                    mmItems.SelectedIndex = 0;
+                    mmItems.SelectedIndex = mmItems.Items.Count - 1;
+                }
+                else
+                {
+                    mmItems.SelectedIndex = mmItems.SelectedIndex - 1;
                 }
                 mmItems.SelectedItem = mmItems.SelectedIndex;
                 mmItems.ScrollIntoView(mmItems.SelectedItem);
@@ -64,10 +67,13 @@ namespace BigBoxRGS
 
             if (FilterMenu.Visibility == Visibility.Visible)
             {
-                fmItems.SelectedIndex = fmItems.SelectedIndex - 1;
-                if (fmItems.SelectedIndex < 0)
+                if (fmItems.SelectedIndex == 0)
                 {
-                    fmItems.SelectedIndex = 0;
+                    fmItems.SelectedIndex = fmItems.Items.Count - 1;
+                }
+                else
+                {
+                    fmItems.SelectedIndex = fmItems.SelectedIndex - 1;
                 }
                 fmItems.SelectedItem = fmItems.SelectedIndex;
                 fmItems.ScrollIntoView(fmItems.SelectedItem);
@@ -77,10 +83,13 @@ namespace BigBoxRGS
             {
                 if (pmmItems.HasItems)
                 {
-                    pmmItems.SelectedIndex = pmmItems.SelectedIndex - 1;
-                    if (pmmItems.SelectedIndex < 0)
+                    if (pmmItems.SelectedIndex == 0)
                     {
-                        pmmItems.SelectedIndex = 0;
+                        pmmItems.SelectedIndex = pmmItems.Items.Count - 1;
+                    }
+                    else
+                    {
+                        pmmItems.SelectedIndex = pmmItems.SelectedIndex - 1;
                     }
                     pmmItems.SelectedItem = pmmItems.SelectedIndex;
                     pmmItems.ScrollIntoView(pmmItems.SelectedItem);
@@ -89,10 +98,13 @@ namespace BigBoxRGS
 
             if (GameDetailMenu.Visibility == Visibility.Visible)
             {
-                gdmItems.SelectedIndex = gdmItems.SelectedIndex - 1;
-                if (gdmItems.SelectedIndex < 0)
+                if (gdmItems.SelectedIndex == 0)
                 {
-                    gdmItems.SelectedIndex = 0;
+                    gdmItems.SelectedIndex = gdmItems.Items.Count - 1;
+                }
+                else
+                {
+                    gdmItems.SelectedIndex = gdmItems.SelectedIndex - 1;
                 }
                 gdmItems.SelectedItem = gdmItems.SelectedIndex;
                 gdmItems.ScrollIntoView(gdmItems.SelectedItem);
@@ -109,14 +121,28 @@ namespace BigBoxRGS
 
             if (MainMenu.Visibility == Visibility.Visible)
             {
-                mmItems.SelectedIndex = mmItems.SelectedIndex + 1;
+                if (mmItems.SelectedIndex == (mmItems.Items.Count - 1))
+                {
+                    mmItems.SelectedIndex = 0;
+                }
+                else
+                {
+                    mmItems.SelectedIndex = mmItems.SelectedIndex + 1;
+                }
                 mmItems.SelectedItem = mmItems.SelectedIndex;
                 mmItems.ScrollIntoView(mmItems.SelectedItem);
             }
 
             if (FilterMenu.Visibility == Visibility.Visible)
             {
-                fmItems.SelectedIndex = fmItems.SelectedIndex + 1;
+                if (fmItems.SelectedIndex == (fmItems.Items.Count - 1))
+                {
+                    fmItems.SelectedIndex = 0;
+                }
+                else
+                {
+                    fmItems.SelectedIndex = fmItems.SelectedIndex + 1;
+                }
                 fmItems.SelectedItem = fmItems.SelectedIndex;
                 fmItems.ScrollIntoView(fmItems.SelectedItem);
             }
@@ -125,7 +151,14 @@ namespace BigBoxRGS
             {
                 if (pmmItems.HasItems)
                 {
-                    pmmItems.SelectedIndex = pmmItems.SelectedIndex + 1;
+                    if (pmmItems.SelectedIndex == (pmmItems.Items.Count - 1))
+                    {
+                        pmmItems.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        pmmItems.SelectedIndex = pmmItems.SelectedIndex + 1;
+                    }
                     pmmItems.SelectedItem = pmmItems.SelectedIndex;
                     pmmItems.ScrollIntoView(pmmItems.SelectedItem);
                 }
@@ -133,7 +166,14 @@ namespace BigBoxRGS
 
             if (GameDetailMenu.Visibility == Visibility.Visible)
             {
-                gdmItems.SelectedIndex = gdmItems.SelectedIndex + 1;
+                if (gdmItems.SelectedIndex == (gdmItems.Items.Count - 1))
+                {
+                    gdmItems.SelectedIndex = 0;
+                }
+                else
+                {
+                    gdmItems.SelectedIndex = gdmItems.SelectedIndex + 1;
+                }
                 gdmItems.SelectedItem = gdmItems.SelectedIndex;
                 gdmItems.ScrollIntoView(gdmItems.SelectedItem);
             }
