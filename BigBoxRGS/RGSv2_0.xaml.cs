@@ -12,13 +12,15 @@ namespace BigBoxRGS
     public partial class RGSv2_0 : UserControl, IBigBoxThemeElementPlugin
     {
         private bool focused;
-        private bool fullLibrary;
-        private bool noPlayMode;
+        private bool byEntireCollection;
+        private bool byPlayMode;
+        private bool byGenre;
         IPlatform _platform;
         IPlaylist _playlist;
         IGame _game;
         private string _playmode;
-        private String _appPath;
+        private string _genre;
+        private string _appPath;
         private string _skipGameDetailsScreen;
 
         public RGSv2_0()
@@ -60,6 +62,17 @@ namespace BigBoxRGS
                 mmItems.ScrollIntoView(mmItems.SelectedItem);
             }
 
+            if (FilterMenu.Visibility == Visibility.Visible)
+            {
+                fmItems.SelectedIndex = fmItems.SelectedIndex - 1;
+                if (fmItems.SelectedIndex < 0)
+                {
+                    fmItems.SelectedIndex = 0;
+                }
+                fmItems.SelectedItem = fmItems.SelectedIndex;
+                fmItems.ScrollIntoView(fmItems.SelectedItem);
+            }
+
             if (PlayModeMenu.Visibility == Visibility.Visible)
             {
                 if (pmmItems.HasItems)
@@ -84,7 +97,6 @@ namespace BigBoxRGS
                 gdmItems.SelectedItem = gdmItems.SelectedIndex;
                 gdmItems.ScrollIntoView(gdmItems.SelectedItem);
             }
-
             return true;
         }
 
@@ -100,6 +112,13 @@ namespace BigBoxRGS
                 mmItems.SelectedIndex = mmItems.SelectedIndex + 1;
                 mmItems.SelectedItem = mmItems.SelectedIndex;
                 mmItems.ScrollIntoView(mmItems.SelectedItem);
+            }
+
+            if (FilterMenu.Visibility == Visibility.Visible)
+            {
+                fmItems.SelectedIndex = fmItems.SelectedIndex + 1;
+                fmItems.SelectedItem = fmItems.SelectedIndex;
+                fmItems.ScrollIntoView(fmItems.SelectedItem);
             }
 
             if (PlayModeMenu.Visibility == Visibility.Visible)
@@ -118,7 +137,6 @@ namespace BigBoxRGS
                 gdmItems.SelectedItem = gdmItems.SelectedIndex;
                 gdmItems.ScrollIntoView(gdmItems.SelectedItem);
             }
-
             return true;
         }
 
@@ -133,48 +151,61 @@ namespace BigBoxRGS
             {
                 if (mmItems.SelectedIndex == 0) // Entire Collection
                 {
-                    ShowPlayModeMenu();
-                    pmmItems.Items.Clear();
-                    pmmTitle.Text = "Entire Collection";
-
-                    IGame[] _allGames = PluginHelper.DataManager.GetAllGames();
-                    IGame[] _filteredList = Array.FindAll(_allGames, BrokenOrHidden);
-                    foreach (IGame g in _filteredList) //this splits the playmodes and puts 1 entry for each in the listbox
-                    {
-                        char[] delimiterChars = { ';' };
-                        foreach (string p in g.PlayModes)
-                        {
-                            p.Split(delimiterChars);
-                            if (!pmmItems.Items.Contains(p))
-                            {
-                                pmmItems.Items.Add(p);
-                            }
-                        }
-                    }
-
-                    if (pmmItems.Items.Count > 0)
-                    {
-                        pmmItems.Items.Add("* No preferred play mode *");
-                        pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
-                        pmmItems.SelectedIndex = 0;
-                    }
-
-                    this.fullLibrary = true;
+                    this.byEntireCollection = true;
+                    fmItems.SelectedIndex = 0;
+                    ShowFilterMenu();
                 }
 
                 if (mmItems.SelectedIndex == 1) // Selected Platform/Playlist
                 {
-                    if (_platform != null)
+                    this.byEntireCollection = false;
+                    fmItems.SelectedIndex = 0;
+                    ShowFilterMenu();
+                }
+                return true;
+            }
+
+            if (FilterMenu.Visibility == Visibility.Visible)
+            {
+                if (fmItems.SelectedIndex == 0) // Choose from all
+                {
+                    this.byPlayMode = false;
+                    this.byGenre = false;
+
+                    if (!this.byEntireCollection)
+                    {
+                        if (_platform != null)
+                        {
+                            PlatformNoPlaymodeRGS();
+                        }
+                        if (_playlist != null)
+                        {
+                            PlaylistNoPlaymodeRGS();
+                        }
+                    }
+                    else
+                    {
+                        AllGamesNoPlaymodeRGS();
+                    }
+                }
+
+                if (fmItems.SelectedIndex == 1) // Choose by genre
+                {
+                    this.byPlayMode = false;
+                    this.byGenre = true;
+
+                    if (this.byEntireCollection)
                     {
                         ShowPlayModeMenu();
                         pmmItems.Items.Clear();
-                        pmmTitle.Text = _platform.Name;
+                        pmmTitle.Text = "Entire Collection by Genre";
 
-                        IGame[] _allGames = _platform.GetAllGames(false, false);
-                        foreach (IGame g in _allGames) //this splits the playmodes and puts 1 entry for each in the listbox
+                        IGame[] _allGames = PluginHelper.DataManager.GetAllGames();
+                        IGame[] _filteredList = Array.FindAll(_allGames, BrokenOrHidden);
+                        foreach (IGame g in _filteredList) //this splits the genres and puts 1 entry for each in the listbox
                         {
                             char[] delimiterChars = { ';' };
-                            foreach (string p in g.PlayModes)
+                            foreach (string p in g.Genres)
                             {
                                 p.Split(delimiterChars);
                                 if (!pmmItems.Items.Contains(p))
@@ -184,23 +215,74 @@ namespace BigBoxRGS
                             }
                         }
 
-                        if (pmmItems.Items.Count > 0)
+                        pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                        pmmItems.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        if (_platform != null)
                         {
-                            pmmItems.Items.Add("* No preferred play mode *");
+                            ShowPlayModeMenu();
+                            pmmItems.Items.Clear();
+                            pmmTitle.Text = _platform.Name + " by Genre";
+
+                            IGame[] _allGames = _platform.GetAllGames(false, false);
+                            foreach (IGame g in _allGames) //this splits the genres and puts 1 entry for each in the listbox
+                            {
+                                char[] delimiterChars = { ';' };
+                                foreach (string p in g.Genres)
+                                {
+                                    p.Split(delimiterChars);
+                                    if (!pmmItems.Items.Contains(p))
+                                    {
+                                        pmmItems.Items.Add(p);
+                                    }
+                                }
+                            }
+
                             pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
                             pmmItems.SelectedIndex = 0;
                         }
 
-                        this.fullLibrary = false;
-                    }
+                        if (_playlist != null)
+                        {
+                            ShowPlayModeMenu();
+                            pmmItems.Items.Clear();
+                            pmmTitle.Text = _playlist.Name + " by Genre";
 
-                    if (_playlist != null)
+                            IGame[] _allGames = _playlist.GetAllGames(false);
+                            IGame[] _filteredList = Array.FindAll(_allGames, BrokenOrHidden);
+                            foreach (IGame g in _filteredList) //this splits the genres and puts 1 entry for each in the listbox
+                            {
+                                char[] delimiterChars = { ';' };
+                                foreach (string p in g.Genres)
+                                {
+                                    p.Split(delimiterChars);
+                                    if (!pmmItems.Items.Contains(p))
+                                    {
+                                        pmmItems.Items.Add(p);
+                                    }
+                                }
+                            }
+
+                            pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                            pmmItems.SelectedIndex = 0;
+                        }
+                    }
+                }
+
+                if (fmItems.SelectedIndex == 2) // Choose by play mode
+                {
+                    this.byPlayMode = true;
+                    this.byGenre = false;
+
+                    if (this.byEntireCollection)
                     {
                         ShowPlayModeMenu();
                         pmmItems.Items.Clear();
-                        pmmTitle.Text = _playlist.Name;
+                        pmmTitle.Text = "Entire Collection by Play Mode";
 
-                        IGame[] _allGames = _playlist.GetAllGames(false);
+                        IGame[] _allGames = PluginHelper.DataManager.GetAllGames();
                         IGame[] _filteredList = Array.FindAll(_allGames, BrokenOrHidden);
                         foreach (IGame g in _filteredList) //this splits the playmodes and puts 1 entry for each in the listbox
                         {
@@ -215,17 +297,61 @@ namespace BigBoxRGS
                             }
                         }
 
-                        if (pmmItems.Items.Count > 0)
+                        pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                        pmmItems.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        if (_platform != null)
                         {
-                            pmmItems.Items.Add("* No preferred play mode *");
+                            ShowPlayModeMenu();
+                            pmmItems.Items.Clear();
+                            pmmTitle.Text = _platform.Name + " by Paly Mode";
+
+                            IGame[] _allGames = _platform.GetAllGames(false, false);
+                            foreach (IGame g in _allGames) //this splits the playmodes and puts 1 entry for each in the listbox
+                            {
+                                char[] delimiterChars = { ';' };
+                                foreach (string p in g.PlayModes)
+                                {
+                                    p.Split(delimiterChars);
+                                    if (!pmmItems.Items.Contains(p))
+                                    {
+                                        pmmItems.Items.Add(p);
+                                    }
+                                }
+                            }
+
                             pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
                             pmmItems.SelectedIndex = 0;
                         }
 
-                        this.fullLibrary = false;
+                        if (_playlist != null)
+                        {
+                            ShowPlayModeMenu();
+                            pmmItems.Items.Clear();
+                            pmmTitle.Text = _playlist.Name + " by Play Mode";
+
+                            IGame[] _allGames = _playlist.GetAllGames(false);
+                            IGame[] _filteredList = Array.FindAll(_allGames, BrokenOrHidden);
+                            foreach (IGame g in _filteredList) //this splits the playmodes and puts 1 entry for each in the listbox
+                            {
+                                char[] delimiterChars = { ';' };
+                                foreach (string p in g.PlayModes)
+                                {
+                                    p.Split(delimiterChars);
+                                    if (!pmmItems.Items.Contains(p))
+                                    {
+                                        pmmItems.Items.Add(p);
+                                    }
+                                }
+                            }
+
+                            pmmItems.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                            pmmItems.SelectedIndex = 0;
+                        }
                     }
                 }
-
                 return true;
             }
 
@@ -233,9 +359,35 @@ namespace BigBoxRGS
             {
                 if (pmmItems.HasItems)
                 {
-                    if (!fullLibrary)
+                    if (!this.byEntireCollection)
                     {
-                        if (pmmItems.SelectedIndex == 0)
+                        if (this.byPlayMode)
+                        {
+                            _playmode = pmmItems.SelectedItem.ToString();
+
+                            if (_platform != null)
+                            {
+                                PlatformPlaymodeRGS();
+                            }
+                            if (_playlist != null)
+                            {
+                                PlaylistPlaymodeRGS();
+                            }
+                        }
+                        else if (this.byGenre)
+                        {
+                            _genre = pmmItems.SelectedItem.ToString();
+
+                            if (_platform != null)
+                            {
+                                PlatformGenreRGS();
+                            }
+                            if (_playlist != null)
+                            {
+                                PlaylistGenreRGS();
+                            }
+                        }
+                        else
                         {
                             if (_platform != null)
                             {
@@ -246,41 +398,33 @@ namespace BigBoxRGS
                                 PlaylistNoPlaymodeRGS();
                             }
                         }
-                        else
-                        {
-                            _playmode = pmmItems.SelectedItem.ToString();
-
-                            if (_platform != null)
-                            {
-                                PlatformRGS();
-                            }
-                            if (_playlist != null)
-                            {
-                                PlaylistRGS();
-                            }
-                        }
                     }
                     else
                     {
-                        if (pmmItems.SelectedIndex == 0)
-                        {
-                            AllGamesNoPlaymodeRGS();
-                        }
-                        else
+                        if (this.byPlayMode)
                         {
                             _playmode = pmmItems.SelectedItem.ToString();
 
-                            AllGamesRGS();
+                            AllGamesPlaymodeRGS();
+                        }
+                        else if (this.byGenre)
+                        {
+                            _genre = pmmItems.SelectedItem.ToString();
+
+                            AllGamesGenreRGS();
+                        }
+                        else
+                        {
+                            AllGamesNoPlaymodeRGS();
                         }
                     }
                 }
-
                 return true;
             }
 
             if (GameDetailMenu.Visibility == Visibility.Visible)
             {
-                if (gdmItems.SelectedIndex == 0)
+                if (gdmItems.SelectedIndex == 0) // Play this game
                 {
                     if (_skipGameDetailsScreen == "true")
                     {
@@ -295,19 +439,30 @@ namespace BigBoxRGS
                         this.focused = false;
                     }
                 }
-                else
+                else // Choose another game
                 {
-                    if (!fullLibrary)
+                    if (!this.byEntireCollection)
                     {
-                        if (!this.noPlayMode)
+                        if (this.byPlayMode)
                         {
                             if (_platform != null)
                             {
-                                PlatformRGS();
+                                PlatformPlaymodeRGS();
                             }
                             if (_playlist != null)
                             {
-                                PlaylistRGS();
+                                PlaylistPlaymodeRGS();
+                            }
+                        }
+                        else if (this.byGenre)
+                        {
+                            if (_platform != null)
+                            {
+                                PlatformGenreRGS();
+                            }
+                            if (_playlist != null)
+                            {
+                                PlaylistGenreRGS();
                             }
                         }
                         else
@@ -324,9 +479,13 @@ namespace BigBoxRGS
                     }
                     else
                     {
-                        if (!this.noPlayMode)
+                        if (this.byPlayMode)
                         {
-                            AllGamesRGS();
+                            AllGamesPlaymodeRGS();
+                        }
+                        else if (this.byGenre)
+                        {
+                            AllGamesGenreRGS();
                         }
                         else
                         {
@@ -334,11 +493,9 @@ namespace BigBoxRGS
                         }
                     }
                 }
-
                 return true;
             }
-
-            return false;
+            return true;
         }
 
         public bool OnEscape()
@@ -350,9 +507,20 @@ namespace BigBoxRGS
 
             if (GameDetailMenu.Visibility == Visibility.Visible)
             {
-                ShowPlayModeMenu();
+                if (!this.byPlayMode & !this.byGenre)
+                {
+                    ShowFilterMenu();
+                }
+                else
+                {
+                    ShowPlayModeMenu();
+                }
             }
             else if (PlayModeMenu.Visibility == Visibility.Visible)
+            {
+                ShowFilterMenu();
+            }
+            else if (FilterMenu.Visibility == Visibility.Visible)
             {
                 ShowMainMenu();
             }
@@ -361,7 +529,6 @@ namespace BigBoxRGS
                 this.Visibility = Visibility.Hidden;
                 this.focused = false;
             }
-
             return true;
         }
 
@@ -391,7 +558,6 @@ namespace BigBoxRGS
             {
                 return false;
             }
-
             return true;
         }
 
@@ -401,7 +567,6 @@ namespace BigBoxRGS
             {
                 return false;
             }
-
             return true;
         }
 
@@ -411,7 +576,6 @@ namespace BigBoxRGS
             {
                 return false;
             }
-
             return true;
         }
 
@@ -421,7 +585,7 @@ namespace BigBoxRGS
             _playlist = playlist;
         }
 
-        private void PlatformRGS()
+        private void PlatformPlaymodeRGS()
         {
             IGame[] _gameList = _platform.GetAllGames(false, false);
             IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedPlayMode);
@@ -433,7 +597,31 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = false;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = true;
+            this.byGenre = false;
+
+            ShowGameDetailMenu();
+        }
+
+        private void PlatformGenreRGS()
+        {
+            IGame[] _gameList = _platform.GetAllGames(false, false);
+            IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedGenre);
+            Random _randomGame = new Random();
+            IGame _randomSelectedGame = _filteredList[_randomGame.Next(0, _filteredList.Length)];
+
+            _game = _randomSelectedGame;
+
+            FillGameDetails();
+
+            gdmItems.SelectedIndex = 0;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = false;
+            this.byGenre = true;
+
             ShowGameDetailMenu();
         }
 
@@ -448,11 +636,15 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = true;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = false;
+            this.byGenre = false;
+
             ShowGameDetailMenu();
         }
 
-        private void PlaylistRGS()
+        private void PlaylistPlaymodeRGS()
         {
             IGame[] _gameList = _playlist.GetAllGames(false);
             IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedPlayMode);
@@ -464,7 +656,31 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = false;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = true;
+            this.byGenre = false;
+
+            ShowGameDetailMenu();
+        }
+
+        private void PlaylistGenreRGS()
+        {
+            IGame[] _gameList = _playlist.GetAllGames(false);
+            IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedGenre);
+            Random _randomGame = new Random();
+            IGame _randomSelectedGame = _filteredList[_randomGame.Next(0, _filteredList.Length)];
+
+            _game = _randomSelectedGame;
+
+            FillGameDetails();
+
+            gdmItems.SelectedIndex = 0;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = false;
+            this.byGenre = true;
+
             ShowGameDetailMenu();
         }
 
@@ -480,7 +696,11 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = true;
+
+            this.byEntireCollection = false;
+            this.byPlayMode = false;
+            this.byGenre = false;
+
             ShowGameDetailMenu();
         }
 
@@ -496,11 +716,15 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = true;
+
+            this.byEntireCollection = true;
+            this.byPlayMode = false;
+            this.byGenre = false;
+
             ShowGameDetailMenu();
         }
 
-        private void AllGamesRGS()
+        private void AllGamesPlaymodeRGS()
         {
             IGame[] _gameList = PluginHelper.DataManager.GetAllGames();
             IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedPlayMode);
@@ -512,7 +736,31 @@ namespace BigBoxRGS
             FillGameDetails();
 
             gdmItems.SelectedIndex = 0;
-            this.noPlayMode = false;
+
+            this.byEntireCollection = true;
+            this.byPlayMode = true;
+            this.byGenre = false;
+
+            ShowGameDetailMenu();
+        }
+
+        private void AllGamesGenreRGS()
+        {
+            IGame[] _gameList = PluginHelper.DataManager.GetAllGames();
+            IGame[] _filteredList = Array.FindAll(_gameList, MatchesSelectedGenre);
+            Random _randomGame = new Random();
+            IGame _randomSelectedGame = _filteredList[_randomGame.Next(0, _filteredList.Length)];
+
+            _game = _randomSelectedGame;
+
+            FillGameDetails();
+
+            gdmItems.SelectedIndex = 0;
+
+            this.byEntireCollection = true;
+            this.byPlayMode = false;
+            this.byGenre = true;
+
             ShowGameDetailMenu();
         }
 
@@ -535,13 +783,24 @@ namespace BigBoxRGS
             }
         }
 
-        //private bool MatchesSelectedGenre(IGame g)
-        //{
-        //    if (g.GenresString.Contains(_genre))
-        //    {
-
-        //    }
-        //}
+        private bool MatchesSelectedGenre(IGame g)
+        {
+            if (g.GenresString.Contains(_genre))
+            {
+                if (g.Broken == true | g.Hide == true)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private bool BrokenOrHidden(IGame g)
         {
@@ -569,6 +828,16 @@ namespace BigBoxRGS
                 gdmPlayMode.Visibility = Visibility.Collapsed;
             }
 
+            if (_game.GenresString != string.Empty)
+            {
+                gdmGenre.Text = _game.GenresString;
+                gdmGenre.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                gdmGenre.Visibility = Visibility.Collapsed;
+            }
+
             if (_game.FrontImagePath != null)
             {
                 gdmImage.Source = new BitmapImage(new Uri(_game.FrontImagePath));
@@ -582,6 +851,15 @@ namespace BigBoxRGS
         private void ShowMainMenu()
         {
             MainMenu.Visibility = Visibility.Visible;
+            FilterMenu.Visibility = Visibility.Collapsed;
+            PlayModeMenu.Visibility = Visibility.Collapsed;
+            GameDetailMenu.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowFilterMenu()
+        {
+            MainMenu.Visibility = Visibility.Collapsed;
+            FilterMenu.Visibility = Visibility.Visible;
             PlayModeMenu.Visibility = Visibility.Collapsed;
             GameDetailMenu.Visibility = Visibility.Collapsed;
         }
@@ -589,6 +867,7 @@ namespace BigBoxRGS
         private void ShowPlayModeMenu()
         {
             MainMenu.Visibility = Visibility.Collapsed;
+            FilterMenu.Visibility = Visibility.Collapsed;
             PlayModeMenu.Visibility = Visibility.Visible;
             GameDetailMenu.Visibility = Visibility.Collapsed;
         }
@@ -596,6 +875,7 @@ namespace BigBoxRGS
         private void ShowGameDetailMenu()
         {
             MainMenu.Visibility = Visibility.Collapsed;
+            FilterMenu.Visibility = Visibility.Collapsed;
             PlayModeMenu.Visibility = Visibility.Collapsed;
             GameDetailMenu.Visibility = Visibility.Visible;
         }

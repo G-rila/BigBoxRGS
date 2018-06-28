@@ -19,24 +19,28 @@
             </ListBox>
             <TextBlock x:Name="mmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
+        <!-- Filter Menu -->
+        <StackPanel x:Name="FilterMenu">
+            <TextBlock x:Name="fmTitle" Text="Filter Menu" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+            <ListBox x:Name="fmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
+                <ListBoxItem Content="Choose from all"/>
+                <ListBoxItem Content="Choose by genre"/>
+                <ListBoxItem Content="Choose by play mode"/>
+            </ListBox>
+            <TextBlock x:Name="fmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
+        </StackPanel>
         <!-- PlayMode Menu -->
-        <!--<DockPanel x:Name="PlayModeMenu" LastChildFill="False" Visibility="Collapsed">
-            <TextBlock x:Name="pmmTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="10"/>
-            <TextBlock x:Name="pmmInstructions" Text="select a random game with one of the following play modes:" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10" DockPanel.Dock="Top"/>
-            <ListBox x:Name="pmmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" DockPanel.Dock="Top"/>
-            <TextBlock x:Name="pmmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10" DockPanel.Dock="Bottom"/>
-        </DockPanel>-->
         <StackPanel x:Name="PlayModeMenu">
             <TextBlock x:Name="pmmTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
             <TextBlock x:Name="pmmInstructions" Text="select a random game with one of the following play modes:" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
-            <ListBox x:Name="pmmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32"/>
+            <ListBox x:Name="pmmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" MaxHeight="500"/>
             <TextBlock x:Name="pmmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
-
         <!-- Game Detail Menu -->
         <StackPanel x:Name="GameDetailMenu">
             <TextBlock x:Name="gdmTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
             <TextBlock x:Name="gdmPlayMode" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+            <TextBlock x:Name="gdmGenre" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
             <Image x:Name="gdmImage" RenderOptions.BitmapScalingMode="HighQuality" Margin="10,0,10,10" MaxWidth="500" MaxHeight="500"/>
             <ListBox x:Name="gdmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
                 <ListBox.Items>
@@ -44,6 +48,7 @@
                     <ListBoxItem Content="Choose another game"/>
                 </ListBox.Items>
             </ListBox>
+            <TextBlock x:Name="gdmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
     </Grid>
 </UserControl>
