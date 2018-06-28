@@ -5,50 +5,82 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:BigBoxRGS"
              mc:Ignorable="d" 
-             d:DesignHeight="480" d:DesignWidth="640" BorderThickness="3" BorderBrush="White" Loaded="UserControl_Loaded">
+             d:DesignHeight="480" d:DesignWidth="640" BorderBrush="White" BorderThickness="3" Loaded="UserControl_Loaded" MaxWidth="800" MaxHeight="800" x:Name="BigBoxRGS">
     <UserControl.Background>
         <SolidColorBrush Color="Black" Opacity="0.85" />
     </UserControl.Background>
     <Grid>
         <!-- Main Menu -->
-        <StackPanel x:Name="MainMenu">
-            <TextBlock x:Name="mmTitle" Text="Main Menu" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-            <ListBox x:Name="mmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
-                <ListBoxItem Content="Entire Collection"/>
-                <ListBoxItem Content="Selected Platform/Playlist"/>
-            </ListBox>
-            <TextBlock x:Name="mmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
-        </StackPanel>
+        <DockPanel x:Name="MainMenu">
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="mmTitle" Text="Main Menu" Foreground="White" FontSize="32" FontWeight="Bold" Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Margin="10"/>
+                <ListBox x:Name="mmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" Grid.Row="1">
+                    <ListBoxItem Content="Entire Collection"/>
+                    <ListBoxItem Content="Selected Platform/Playlist"/>
+                </ListBox>
+                <TextBlock x:Name="mmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
+            </Grid>
+        </DockPanel>
         <!-- Filter Menu -->
-        <StackPanel x:Name="FilterMenu">
-            <TextBlock x:Name="fmTitle" Text="Filter Menu" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-            <ListBox x:Name="fmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
-                <ListBoxItem Content="Choose from all"/>
-                <ListBoxItem Content="Choose by genre"/>
-                <ListBoxItem Content="Choose by play mode"/>
-            </ListBox>
-            <TextBlock x:Name="fmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
-        </StackPanel>
+        <DockPanel x:Name="FilterMenu">
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="fmTitle" Text="Filter Menu" Foreground="White" FontSize="32" FontWeight="Bold" Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Margin="10"/>
+                <ListBox x:Name="fmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" Grid.Row="1">
+                    <ListBoxItem Content="Choose from all"/>
+                    <ListBoxItem Content="Choose by genre"/>
+                    <ListBoxItem Content="Choose by play mode"/>
+                </ListBox>
+                <TextBlock x:Name="fmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
+            </Grid>
+        </DockPanel>
         <!-- PlayMode Menu -->
-        <StackPanel x:Name="PlayModeMenu">
-            <TextBlock x:Name="pmmTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-            <TextBlock x:Name="pmmInstructions" Text="select a random game with one of the following play modes:" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
-            <ListBox x:Name="pmmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" MaxHeight="500"/>
-            <TextBlock x:Name="pmmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
-        </StackPanel>
+        <DockPanel x:Name="PlayModeMenu">
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="pmmTitle" Foreground="White" FontSize="32" FontWeight="Bold" Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Margin="10,10,10,0"/>
+                <TextBlock x:Name="pmmInstructions" Text="select a random game with your desired criteria:" Foreground="White" FontSize="20" Grid.Row="1" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10,0,10,10"/>
+                <ListBox x:Name="pmmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" Grid.Row="2"/>
+                <TextBlock x:Name="pmmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="3" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
+            </Grid>
+        </DockPanel>
         <!-- Game Detail Menu -->
-        <StackPanel x:Name="GameDetailMenu">
-            <TextBlock x:Name="gdmTitle" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-            <TextBlock x:Name="gdmPlayMode" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
-            <TextBlock x:Name="gdmGenre" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10,0,10,10"/>
-            <Image x:Name="gdmImage" RenderOptions.BitmapScalingMode="HighQuality" Margin="10,0,10,10" MaxWidth="500" MaxHeight="500"/>
-            <ListBox x:Name="gdmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32">
-                <ListBox.Items>
-                    <ListBoxItem Content="Play this game"/>
-                    <ListBoxItem Content="Choose another game"/>
-                </ListBox.Items>
-            </ListBox>
-            <TextBlock x:Name="gdmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
-        </StackPanel>
+        <DockPanel x:Name="GameDetailMenu" Width="{Binding ElementName=gdmTitle, Path=Width}">
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="gdmTitle" Foreground="White" FontSize="32" FontWeight="Bold" Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Margin="10,10,10,0"/>
+                <TextBlock x:Name="gdmPlayMode" Foreground="White" FontSize="20" Grid.Row="1" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10,0"/>
+                <TextBlock x:Name="gdmGenre" Foreground="White" FontSize="20" Grid.Row="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10,0"/>
+                <Image x:Name="gdmImage" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="3" Margin="10" MaxWidth="800"/>
+                <ListBox x:Name="gdmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" Grid.Row="4">
+                    <ListBox.Items>
+                        <ListBoxItem Content="Play this game"/>
+                        <ListBoxItem Content="Choose another game"/>
+                    </ListBox.Items>
+                </ListBox>
+                <TextBlock x:Name="gdmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="5" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
+            </Grid>
+        </DockPanel>
     </Grid>
 </UserControl>

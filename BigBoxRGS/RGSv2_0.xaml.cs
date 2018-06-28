@@ -346,7 +346,7 @@ namespace BigBoxRGS
                         {
                             ShowPlayModeMenu();
                             pmmItems.Items.Clear();
-                            pmmTitle.Text = _platform.Name + " by Paly Mode";
+                            pmmTitle.Text = _platform.Name + " by Play Mode";
 
                             IGame[] _allGames = _platform.GetAllGames(false, false);
                             foreach (IGame g in _allGames) //this splits the playmodes and puts 1 entry for each in the listbox
