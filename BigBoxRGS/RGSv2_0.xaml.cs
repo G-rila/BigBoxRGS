@@ -17,6 +17,8 @@ namespace BigBoxRGS
         private bool byEntireCollection;
         private bool byPlayMode;
         private bool byGenre;
+        private bool showGameDetails;
+        private bool showGameNotes;
         IPlatform _platform;
         IPlaylist _playlist;
         IGame _game;
@@ -28,6 +30,18 @@ namespace BigBoxRGS
         public RGSv2_0()
         {
             this.InitializeComponent();
+        }
+
+        public bool ShowGameDetails
+        {
+            get { return showGameDetails; }
+            set { showGameDetails = value; }
+        }
+
+        public bool ShowGameNotes
+        {
+            get { return showGameNotes; }
+            set { showGameNotes = value; }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -598,6 +612,28 @@ namespace BigBoxRGS
         {
             if (held & !this.focused)
             {
+                if (ShowGameDetails)
+                {
+                    gdmDetailsColumn.Width = new GridLength(1, GridUnitType.Star);
+                    gdmPlayModeRow.Height = new GridLength(0);
+                    gdmGenreRow.Height = new GridLength(0);
+                }
+                else
+                {
+                    gdmDetailsColumn.Width = new GridLength(0);
+                    gdmPlayModeRow.Height = new GridLength(0, GridUnitType.Auto);
+                    gdmGenreRow.Height = new GridLength(0, GridUnitType.Auto);
+                }
+
+                if (ShowGameNotes)
+                {
+                    gdmNotesRow.Height = new GridLength(1, GridUnitType.Star);
+                }
+                else
+                {
+                    gdmNotesRow.Height = new GridLength(0);
+                }
+
                 ShowMainMenu();
                 mmItems.SelectedIndex = 0;
                 this.Visibility = Visibility.Visible;
@@ -880,6 +916,36 @@ namespace BigBoxRGS
         {
             gdmTitle.Text = _game.Title;
 
+            //if (_skipGameDetailsScreen == "true")
+            //{
+            //    gdmPlayModeRow.Height = new GridLength(0);
+            //    gdmGenreRow.Height = new GridLength(0);
+            //}
+            //else
+            //{
+            //    gdmDetailsColumn.Width = new GridLength(0);
+
+            //    if (_game.PlayMode != string.Empty)
+            //    {
+            //        gdmPlayMode.Text = _game.PlayMode;
+            //        gdmPlayMode.Visibility = Visibility.Visible;
+            //    }
+            //    else
+            //    {
+            //        gdmPlayMode.Visibility = Visibility.Collapsed;
+            //    }
+
+            //    if (_game.GenresString != string.Empty)
+            //    {
+            //        gdmGenre.Text = _game.GenresString;
+            //        gdmGenre.Visibility = Visibility.Visible;
+            //    }
+            //    else
+            //    {
+            //        gdmGenre.Visibility = Visibility.Collapsed;
+            //    }
+
+            //}
             if (_game.PlayMode != string.Empty)
             {
                 gdmPlayMode.Text = _game.PlayMode;
@@ -908,6 +974,10 @@ namespace BigBoxRGS
             {
                 gdmImage.Source = null;
             }
+
+            gdmDetails.Text = _game.DetailsWithPlatform;
+
+            gdmNotes.Text = _game.Notes;
         }
 
         private void ShowMainMenu()
