@@ -82,11 +82,11 @@ xmlns:bbrgs="clr-namespace:BigBoxRGS;assembly=BigBoxRGS"
                 <transitions:TransitionPresenter Grid.Row="3" TransitionSelector="{Binding TopBoxesTransitionSelector}" Content="{Binding TopBoxesView}" />
                 <transitions:TransitionPresenter Grid.Row="5" TransitionSelector="{Binding BottomBoxesTransitionSelector}" Content="{Binding BottomBoxesView}" />
             </Grid>
-        </Grid>
+        </Grid><!-- CLOSING GRID TAG -->
         <Grid Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="{Binding ElementName=Canvas, Path=ActualWidth}">
           <bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid> 
-    </Canvas>
+    </Canvas><!-- CLOSING CANVAS TAG -->
 </UserControl>
 ```
 
