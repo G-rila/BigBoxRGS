@@ -92,28 +92,5 @@
                 <TextBlock x:Name="gdmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="6" Grid.ColumnSpan="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
             </Grid>
         </DockPanel>
-        <!--<DockPanel x:Name="GameDetailMenu">
-            <Grid DockPanel.Dock="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock x:Name="gdmTitle" Foreground="White" FontSize="32" FontWeight="Bold" Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Margin="10,10,10,0"/>
-                <TextBlock x:Name="gdmPlayMode" Foreground="White" FontSize="20" Grid.Row="1" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10,0"/>
-                <TextBlock x:Name="gdmGenre" Foreground="White" FontSize="20" Grid.Row="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10,0"/>
-                <Image x:Name="gdmImage" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="3" Margin="10"/>
-                <ListBox x:Name="gdmItems" Style="{DynamicResource ListBoxStyle}" FontSize="32" Grid.Row="4">
-                    <ListBox.Items>
-                        <ListBoxItem Content="Play this game"/>
-                        <ListBoxItem Content="Choose another game"/>
-                    </ListBox.Items>
-                </ListBox>
-                <TextBlock x:Name="gdmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="5" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
-            </Grid>
-        </DockPanel>-->
     </Grid>
 </UserControl>
