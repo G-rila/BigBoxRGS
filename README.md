@@ -6,7 +6,7 @@ This plugin adds the ability to choose a random game from the selected platform/
 Place the .DLL in your LaunchBox\Plugins folder.
 
 ## Setup
-1. Add the namespace to view(s) you want to be able to call the plugin from. Ideally, this would just be whatever platform view you are using (ie. PlatformWheel1FiltersView.xaml) but it can be added to game views also.
+1. Add the namespace to the view(s) you want to be able to call the plugin from. Ideally, this would just be whatever platform view you are using (ie. PlatformWheel1FiltersView.xaml) but it can be added to the game view(s) also.
 ```xaml
 xmlns:bbrgs="clr-namespace:BigBoxRGS;assembly=BigBoxRGS"
 ```
