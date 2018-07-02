@@ -24,6 +24,9 @@
                     <ListBoxItem Content="Selected Platform/Playlist"/>
                 </ListBox>
                 <TextBlock x:Name="mmBottom" Text="press the back button to close this menu" Foreground="White" FontSize="20" Grid.Row="2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Margin="10"/>
+                <Border x:Name="mmError" Grid.Row="2" Background="Red" Opacity="0">
+                    <TextBlock Text="NO PLATFORM/PLAYLIST SELECTED!" Foreground="White" FontSize="20" FontWeight="Bold" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Visibility="Visible" Margin="10"/>
+                </Border>
             </Grid>
         </DockPanel>
         <!-- Filter Menu -->

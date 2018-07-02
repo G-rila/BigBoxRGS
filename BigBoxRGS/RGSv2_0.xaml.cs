@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using Unbroken.LaunchBox.Plugins;
@@ -199,8 +201,27 @@ namespace BigBoxRGS
                 if (mmItems.SelectedIndex == 1) // Selected Platform/Playlist
                 {
                     this.byEntireCollection = false;
-                    fmItems.SelectedIndex = 0;
-                    ShowFilterMenu();
+
+                    if (_platform == null & _playlist == null)
+                    {
+                        var da = new DoubleAnimationUsingKeyFrames();
+                        da.KeyFrames.Add(new EasingDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0))));
+                        da.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200))));
+                        da.KeyFrames.Add(new EasingDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(800))));
+                        da.KeyFrames.Add(new EasingDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1000))));
+
+                        var sb = new Storyboard();
+                        sb.Duration = TimeSpan.FromMilliseconds(1000);
+                        Storyboard.SetTarget(da, mmError);
+                        Storyboard.SetTargetProperty(da, new PropertyPath(OpacityProperty));
+                        sb.Children.Add(da);
+                        sb.Begin();
+                    }
+                    else
+                    {
+                        fmItems.SelectedIndex = 0;
+                        ShowFilterMenu();
+                    }
                 }
                 return true;
             }
@@ -218,6 +239,7 @@ namespace BigBoxRGS
                         {
                             PlatformNoPlaymodeRGS();
                         }
+
                         if (_playlist != null)
                         {
                             PlaylistNoPlaymodeRGS();
