@@ -916,36 +916,6 @@ namespace BigBoxRGS
         {
             gdmTitle.Text = _game.Title;
 
-            //if (_skipGameDetailsScreen == "true")
-            //{
-            //    gdmPlayModeRow.Height = new GridLength(0);
-            //    gdmGenreRow.Height = new GridLength(0);
-            //}
-            //else
-            //{
-            //    gdmDetailsColumn.Width = new GridLength(0);
-
-            //    if (_game.PlayMode != string.Empty)
-            //    {
-            //        gdmPlayMode.Text = _game.PlayMode;
-            //        gdmPlayMode.Visibility = Visibility.Visible;
-            //    }
-            //    else
-            //    {
-            //        gdmPlayMode.Visibility = Visibility.Collapsed;
-            //    }
-
-            //    if (_game.GenresString != string.Empty)
-            //    {
-            //        gdmGenre.Text = _game.GenresString;
-            //        gdmGenre.Visibility = Visibility.Visible;
-            //    }
-            //    else
-            //    {
-            //        gdmGenre.Visibility = Visibility.Collapsed;
-            //    }
-
-            //}
             if (_game.PlayMode != string.Empty)
             {
                 gdmPlayMode.Text = _game.PlayMode;
