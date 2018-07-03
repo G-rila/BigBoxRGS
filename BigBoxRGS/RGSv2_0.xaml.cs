@@ -916,24 +916,41 @@ namespace BigBoxRGS
         {
             gdmTitle.Text = _game.Title;
 
-            if (_game.PlayMode != string.Empty)
+            if (ShowGameDetails)
             {
-                gdmPlayMode.Text = _game.PlayMode;
-                gdmPlayMode.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                gdmPlayMode.Visibility = Visibility.Collapsed;
-            }
+                gdmDetails.Text = _game.DetailsWithPlatform;
+                gdmDetails.Visibility = Visibility.Visible;
 
-            if (_game.GenresString != string.Empty)
-            {
-                gdmGenre.Text = _game.GenresString;
-                gdmGenre.Visibility = Visibility.Visible;
+                gdmPlayMode.Text = "";
+                gdmPlayMode.Visibility = Visibility.Collapsed;
+
+                gdmGenre.Text = "";
+                gdmGenre.Visibility = Visibility.Collapsed;
             }
             else
             {
-                gdmGenre.Visibility = Visibility.Collapsed;
+                gdmDetails.Text = "";
+                gdmDetails.Visibility = Visibility.Collapsed;
+
+                if (_game.PlayMode != string.Empty)
+                {
+                    gdmPlayMode.Text = _game.PlayMode;
+                    gdmPlayMode.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    gdmPlayMode.Visibility = Visibility.Collapsed;
+                }
+
+                if (_game.GenresString != string.Empty)
+                {
+                    gdmGenre.Text = _game.GenresString;
+                    gdmGenre.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    gdmGenre.Visibility = Visibility.Collapsed;
+                }
             }
 
             if (_game.FrontImagePath != null)
@@ -942,12 +959,19 @@ namespace BigBoxRGS
             }
             else
             {
-                gdmImage.Source = null;
+                gdmImage.Source = new BitmapImage(new Uri("pack://application:,,,/BigBoxRGS;component/images/default.png"));
             }
 
-            gdmDetails.Text = _game.DetailsWithPlatform;
-
-            gdmNotes.Text = _game.Notes;
+            if (ShowGameNotes)
+            {
+                gdmNotes.Text = _game.Notes;
+                gdmNotes.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                gdmNotes.Text = "";
+                gdmNotes.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void ShowMainMenu()
