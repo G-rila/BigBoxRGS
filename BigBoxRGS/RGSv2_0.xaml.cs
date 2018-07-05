@@ -89,10 +89,10 @@ namespace BigBoxRGS
 
             if (this.CheckForUpdates)
             {
-                if (Properties.Settings.Default.LastUpdateCheck < DateTime.Now.ToUniversalTime().Subtract(new TimeSpan(0, 0, 30, 0))) // only check once every 30 minutes to avoid API abuse
+                if (Properties.Settings.Default.LastUpdateCheck < DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 30, 0))) // only check once every 30 minutes to avoid API abuse
                 {
                     mmVersion.Text = UpdateCheck();
-                    Properties.Settings.Default.LastUpdateCheck = DateTime.Now.ToUniversalTime();
+                    Properties.Settings.Default.LastUpdateCheck = DateTime.UtcNow;
                     Properties.Settings.Default.Save();
                 }
                 else
