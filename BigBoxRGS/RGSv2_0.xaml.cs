@@ -1007,7 +1007,7 @@ namespace BigBoxRGS
             }
             else
             {
-                gdmImage.Source = new BitmapImage(new Uri("pack://application:,,,/BigBoxRGS;component/images/default.png"));
+                gdmImage.Source = new BitmapImage(new Uri("pack://application:,,,/BigBoxRGS;component/images/no-artwork.png"));
             }
 
             if (this.ShowGameNotes)
