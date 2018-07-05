@@ -23,6 +23,7 @@ namespace BigBoxRGS
         private bool showGameDetails;
         private bool showGameNotes;
         private bool checkForUpdates;
+        private bool foundUpdate;
 
         IPlatform _platform;
         IPlaylist _playlist;
@@ -88,7 +89,7 @@ namespace BigBoxRGS
 
             if (this.CheckForUpdates)
             {
-                if (Properties.Settings.Default.LastUpdateCheck < DateTime.Now.ToUniversalTime().Subtract(new TimeSpan(0, 12, 0, 0))) // only check once every 12 hours
+                if (Properties.Settings.Default.LastUpdateCheck < DateTime.Now.ToUniversalTime().Subtract(new TimeSpan(0, 0, 30, 0))) // only check once every 30 minutes to avoid API abuse
                 {
                     mmVersion.Text = UpdateCheck();
                     Properties.Settings.Default.LastUpdateCheck = DateTime.Now.ToUniversalTime();
@@ -96,7 +97,14 @@ namespace BigBoxRGS
                 }
                 else
                 {
-                    mmVersion.Text = _appVersion;
+                    if (this.foundUpdate)
+                    {
+                        mmVersion.Text = "A newer version is available on GitHub";
+                    }
+                    else
+                    {
+                        mmVersion.Text = _appVersion;
+                    }
                 }
             }
             else
@@ -1029,10 +1037,12 @@ namespace BigBoxRGS
 
                 if (_appVersion != latest)
                 {
+                    this.foundUpdate = true;
                     return "A newer version is available on GitHub";
                 }
                 else
                 {
+                    this.foundUpdate = false;
                     return latest;
                 }
             }
