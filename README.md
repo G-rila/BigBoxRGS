@@ -29,7 +29,7 @@ xmlns:bbrgs="clr-namespace:BigBoxRGS;assembly=BigBoxRGS"
 2. Add this code after the closing ```</Grid>``` tag, before the closing ```</Canvas>``` tag.
 ```xaml
 <Grid Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="{Binding ElementName=Canvas, Path=ActualWidth}">
-  <bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False"/>
+  <bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False" CheckForUpdates="True"/>
 </Grid>
 ```
 
@@ -84,14 +84,15 @@ xmlns:bbrgs="clr-namespace:BigBoxRGS;assembly=BigBoxRGS"
             </Grid>
         </Grid><!-- CLOSING GRID TAG -->
         <Grid Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="{Binding ElementName=Canvas, Path=ActualWidth}">
-          <bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False"/>
+          <bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False" CheckForUpdates="True"/>
         </Grid> 
     </Canvas><!-- CLOSING CANVAS TAG -->
 </UserControl>
 ```
 
 ## Configure
-You can control if the plugin shows game details/notes by changing the boolean properties ```ShowGameNotes=""``` and ```ShowGameDetails=""```.
+* You can control if the plugin shows game details/notes by changing the boolean properties ```ShowGameNotes=""``` and ```ShowGameDetails=""```.
+* You can control if the plugin checks for updates by changing the boolean property ```CheckForUpdates=""```. To conform with GitHub's API policy, the query will only happen once every 30 minutes.
 
 ## Usage
 In BigBox, while you are in the view(s) you added the plugin to, hold right to call the plugin.
