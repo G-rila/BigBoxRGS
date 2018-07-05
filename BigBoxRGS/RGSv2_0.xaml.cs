@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,24 +9,47 @@ using System.Windows.Media.Imaging;
 using System.Xml;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
+using Octokit;
+using System.Threading.Tasks;
+using System.Configuration;
 
 namespace BigBoxRGS
 {
     public partial class RGSv2_0 : UserControl, IBigBoxThemeElementPlugin
     {
+        static string _appVersion = "v2.0.7";
+
         private bool focused;
         private bool byEntireCollection;
         private bool byPlayMode;
         private bool byGenre;
         private bool showGameDetails;
         private bool showGameNotes;
+        private bool checkForUpdates;
+
         IPlatform _platform;
         IPlaylist _playlist;
         IGame _game;
+        
         private string _playmode;
         private string _genre;
         private string _appPath;
         private string _skipGameDetailsScreen;
+
+        static RGSv2_0()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Resolver);
+        }
+
+        static Assembly Resolver(object sender, ResolveEventArgs args)
+        {
+            Assembly a1 = Assembly.GetExecutingAssembly();
+            Stream s = a1.GetManifestResourceStream("BigBoxRGS.Octokit.dll");
+            byte[] block = new byte[s.Length];
+            s.Read(block, 0, block.Length);
+            Assembly a2 = Assembly.Load(block);
+            return a2;
+        }
 
         public RGSv2_0()
         {
@@ -44,6 +68,12 @@ namespace BigBoxRGS
             set { showGameNotes = value; }
         }
 
+        public bool CheckForUpdates
+        {
+            get { return checkForUpdates; }
+            set { checkForUpdates = value; }
+        }
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             _appPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
@@ -58,6 +88,24 @@ namespace BigBoxRGS
 
             this.Visibility = Visibility.Hidden;
             ShowMainMenu();
+
+            if (this.CheckForUpdates)
+            {
+                if (Properties.Settings.Default.LastUpdateCheck < DateTime.Now.ToUniversalTime().Subtract(new TimeSpan(0, 12, 0, 0))) // only check once every 12 hours
+                {
+                    mmVersion.Text = UpdateCheck();
+                    Properties.Settings.Default.LastUpdateCheck = DateTime.Now.ToUniversalTime();
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    mmVersion.Text = _appVersion;
+                }
+            }
+            else
+            {
+                mmVersion.Text = _appVersion;
+            }
         }
 
         public bool OnUp(bool held)
@@ -612,7 +660,7 @@ namespace BigBoxRGS
         {
             if (held & !this.focused)
             {
-                if (ShowGameDetails)
+                if (this.ShowGameDetails)
                 {
                     gdmDetailsColumn.Width = new GridLength(1, GridUnitType.Star);
                     gdmPlayModeRow.Height = new GridLength(0);
@@ -625,7 +673,7 @@ namespace BigBoxRGS
                     gdmGenreRow.Height = new GridLength(0, GridUnitType.Auto);
                 }
 
-                if (ShowGameNotes)
+                if (this.ShowGameNotes)
                 {
                     gdmNotesRow.Height = new GridLength(1, GridUnitType.Star);
                 }
@@ -916,7 +964,7 @@ namespace BigBoxRGS
         {
             gdmTitle.Text = _game.Title;
 
-            if (ShowGameDetails)
+            if (this.ShowGameDetails)
             {
                 gdmDetails.Text = _game.DetailsWithPlatform;
                 gdmDetails.Visibility = Visibility.Visible;
@@ -962,7 +1010,7 @@ namespace BigBoxRGS
                 gdmImage.Source = new BitmapImage(new Uri("pack://application:,,,/BigBoxRGS;component/images/default.png"));
             }
 
-            if (ShowGameNotes)
+            if (this.ShowGameNotes)
             {
                 gdmNotes.Text = _game.Notes;
                 gdmNotes.Visibility = Visibility.Visible;
@@ -971,6 +1019,29 @@ namespace BigBoxRGS
             {
                 gdmNotes.Text = "";
                 gdmNotes.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private string UpdateCheck()
+        {
+            try
+            {
+                var client = new GitHubClient(new ProductHeaderValue("BigBoxRGS"));
+                var request = client.Repository.Release.GetLatest("G-rila", "BigBoxRGS").Result;
+                var latest = request.TagName;
+
+                if (_appVersion != latest)
+                {
+                    return "A newer version is available on GitHub";
+                }
+                else
+                {
+                    return latest;
+                }
+            }
+            catch
+            {
+                return "An error occured while checking for updates!";
             }
         }
 
