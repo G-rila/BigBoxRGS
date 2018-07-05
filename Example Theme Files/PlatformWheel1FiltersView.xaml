@@ -47,7 +47,7 @@
             </Grid>
         </Grid>
 		<Grid Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="{Binding ElementName=Canvas, Path=ActualWidth}">
-			<bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False"/>
+			<bbrgs:RGSv2_0 HorizontalAlignment="Center" VerticalAlignment="Center" ShowGameDetails="False" ShowGameNotes="False" CheckForUpdates="True"/>
 		</Grid> 
     </Canvas>
 </UserControl>
